@@ -1,61 +1,84 @@
-# 📂 Incident Response Playbook: Recovering Lost History via Git Reflog (Q37)
+# Local Lab: Troubleshooting a Docker Container Restart Loop (Q63)
 
-This playbook establishes standard operational procedures (SOPs) for tracing, capturing, and restoring deleted historical commit blocks accidentally decoupled from the active commit tree via destructive history operations (`git reset --hard`).
-
----
-
-### 🧠 The Core Architecture: The Hidden Transaction Ledger
-
-When a destructive command like `git reset --hard` is executed, the Git engine moves your branch pointer backward across the graph tree database, hiding subsequent commits from standard logs (`git status`, `git log`). However, the physical data blocks matching those hidden commits continue to survive as **Orphaned (or Dangling) Objects** inside the local `.git/objects/` store.
-
-The **Reflog (Reference Log)** serves as a chronological append-only tracking ledger that logs exactly where the `HEAD` cursor has pointed over the last 90 days. This tracking ledger operates completely independently of the branch graph database, making it the ultimate safety net for engineering incident recovery.
+This hands-on lab exercises real-world system engineering forensics on a Linux machine by simulating a microservice container trapped in an infinite boot loop due to a missing deployment context profile.
 
 ---
 
-### 🚀 Lab Simulation Protocol
+## 🛠️ Step 1: Spin Up the Broken Loop Container
 
-#### **1. Construct a Target Vulnerable Timeline**
-Execute the shell commands inside an isolated scratchpad workspace to build a baseline history before triggering accidental data deletion:
+Run this single command on your local Linux terminal. This utilizes a base lightweight container and wraps it in a shell conditional check that enforces key registration checks.
+
 ```bash
-mkdir -p ~/git-reflog-lab && cd ~/git-reflog-lab
-git init -b main
-
-# Create three distinct progressive development milestones
-echo "Base Infra" > system.infra && git add system.infra && git commit -m "feat: component 1"
-echo "Connectors" >> system.infra && git add system.infra && git commit -m "feat: component 2"
-echo "Security" >> system.infra && git add system.infra && git commit -m "feat: component 3"
-
-# SABOTAGE: Forcefully overwrite local history milestones to simulate catastrophic human error
-git reset --hard HEAD~2
+docker run -d \
+  --name auth-api \
+  --restart always \
+  -p 8080:8080 \
+  node:20-slim sh -c 'echo "Starting up..."; sleep 1; if [ -z "$SECRET_KEY_BASE" ]; then echo "[FATAL ERROR]: Critical environment context variable SECRET_KEY_BASE is undefined."; exit 1; fi'
 ```
 
 ---
 
-### 🔍 Diagnostic Workflow (The Reference Log Analysis)
+## 🔍 Step 2: Diagnostic Walkthrough
 
-#### **1. Unmask Hidden Pointer Positions**
-Query the local chronological reference tracker to expose the hidden SHA-1 transaction hashes preceding the execution mistake:
+### 1. Track Container Process Lifecycles
+Query the host machine network namespace process mapping table:
 ```bash
-git reflog
+docker ps
 ```
-*   **Target Signature Search:** Look for the specific reference state index notation (e.g., `HEAD@{1}`) matching the exact commit message text that vanished from your main log sequence. Note down the alphanumeric **SHA-1 Hash value key**.
+* **Observation Framework**: Inspect the `STATUS` column. The time metric will continually flap or alternate rapidly between short bursts like `Up 1 second` and `Restarting (1) X seconds ago`.
+
+### 2. Harvest Writable Layer Console Buffers
+Dump standard error outputs out of the decaying application layer memory buffer to locate fatal trace paths:
+```bash
+docker logs auth-api --tail 10
+```
+* **Footprint Recovers**:
+  ```text
+  Starting up...
+  [FATAL ERROR]: Critical environment context variable SECRET_KEY_BASE is undefined.
+  ```
+
+### 3. Query the Engine Exit Signals
+Extract specific state machine metadata vectors from the container daemon engine to isolate infrastructure faults from code failures:
+```bash
+docker inspect auth-api --format='{{json .State.ExitCode}}'
+```
+* **Forensic Metrics Analysis**:
+  * **Code `1`**: Explicit runtime or configuration framework crash (This lab instance).
+  * **Code `137`**: Process killed abruptly by the Linux host kernel OOM (Out-Of-Memory) manager.
 
 ---
 
-### 🧯 Incident Remediation (The Graph Reconstruction Plan)
+## 🛠️ Step 3: Apply the Production Hotfix
 
-#### **1. Deploy an Emergency Anchor Branch**
-Instantly generate an emergency snapshot branch anchor fixed onto the isolated target commit hash tracking ID discovered via your reflog analysis:
+Because the code logic dictates an image cannot function without its target parameter string, wipe out the unstable deployment slice and rebuild a version including the parameter flag inject block.
+
+### 1. Purge the Flapping Loop Container
 ```bash
-git branch rescue/operational-recovery <LOST_COMMIT_SHA_HASH>
+docker rm -f auth-api
 ```
 
-#### **2. Finalize Workspace State Realignment**
-Switch your active terminal development cursor over onto your newly generated safety track to resume operational pipelines:
+### 2. Relaunch with the Required Environment Key
+Re-instantiate the container with its execution payload securely linked to an inline context variable flag:
 ```bash
-git switch rescue/operational-recovery
+docker run -d \
+  --name auth-api \
+  --restart always \
+  -p 8080:8080 \
+  -e SECRET_KEY_BASE="StagingVaultKey2026" \
+  node:20-slim sh -c 'echo "Starting up..."; sleep 1; if [ -z "\$SECRET_KEY_BASE" ]; then echo "[FATAL ERROR]: Critical environment context variable SECRET_KEY_BASE is undefined."; exit 1; else echo "Initialization complete. App listening securely on port 8080..."; tail -f /dev/null; fi'
 ```
 
-#### **3. Critical Production Warnings & Architecture Guardrails**
-*   **Reflog is Local-Only:** The reference log is a completely local machine workspace metric ledger. It is **never** synchronized, pushed, or fetched across remote server paths (GitHub/GitLab). You can only run a reflog recovery on the exact workstation machine where the destructive action physically occurred.
-*   **Time-Sensitive Expiration Window:** Orphaned commits are not held forever. The Linux Git subsystem will automatically trigger garbage collection (`git gc`) routines periodically, purging unreachable data permanently after **30 days**. Always execute reflog recoveries immediately following an incident window.
+### 3. Certify System Boundary Health
+```bash
+docker ps
+```
+* **Resolution Proof**: The target indicator matrix under `STATUS` should now display a durable, stable running window tracking cleanly past `Up 30 seconds`, `Up 5 minutes`, etc.
+
+---
+
+## 🧼 Step 4: Infrastructure Clean Up
+Remove the temporary training container and clean up local network bindings once practice operations are concluded:
+```bash
+docker rm -f auth-api
+```
