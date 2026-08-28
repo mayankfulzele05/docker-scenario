@@ -25,3 +25,8 @@ docker network ls
 ```bash
 docker network inspect secure-prod-net
 ```
+
+
+
+
+<img width="1939" height="1080" alt="Screenshot (91)" src="https://github.com/user-attachments/assets/81679b7c-c443-4a39-a75e-bc9597550abd" />
