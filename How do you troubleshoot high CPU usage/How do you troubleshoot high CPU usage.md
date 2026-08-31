@@ -28,4 +28,7 @@ docker rm -f burning-app
 rm -rf ~/docker-cpu-lab
 ```
 
+docker update --cpus="0.25" burning-app
+
+<img width="1939" height="1055" alt="Screenshot (94)" src="https://github.com/user-attachments/assets/e23c55f5-1837-43e9-83c7-efc2a3589b56" />
 
