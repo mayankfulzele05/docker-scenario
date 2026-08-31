@@ -33,3 +33,8 @@ just increase memory in this line
   --restart always \
   -m 1g \
   resource-test:leak
+
+
+
+  <img width="1918" height="408" alt="Screenshot (93)" src="https://github.com/user-attachments/assets/f42e27ca-64e2-4e6a-92b4-dd5c6776c9ef" />
+
