@@ -30,3 +30,7 @@ sudo sh -c "truncate -s 0 /var/lib/docker/containers/*/*-json.log"
 ```bash
 docker system prune -a --volumes --force
 ```
+
+
+<img width="1939" height="1074" alt="Screenshot (92)" src="https://github.com/user-attachments/assets/e0471d87-5a77-421f-aa36-738b1b4911e0" />
+
