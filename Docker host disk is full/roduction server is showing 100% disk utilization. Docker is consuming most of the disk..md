@@ -29,6 +29,12 @@ docker system df -v
 docker system prune -f
 ```
 
+
+
+
+<img width="1829" height="1031" alt="image" src="https://github.com/user-attachments/assets/c36a4ae6-686c-435f-bdad-a0365be9f442" />
+
+
 ### Hard Nuclear Sweep (Reclaims Maximum Disk Space)
 ```bash
 docker system prune -a --volumes --force
