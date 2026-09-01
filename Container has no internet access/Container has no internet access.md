@@ -25,3 +25,8 @@ docker rm -f app-worker backend-db 2>/dev/null
 docker network rm prod-isolated-net 2>/dev/null
 rm -rf ~/docker-routing-lab
 ```
+
+
+
+
+<img width="1933" height="1049" alt="Screenshot (95)" src="https://github.com/user-attachments/assets/0ccd945c-6fc9-4373-bffd-cda8ce4c2006" />
