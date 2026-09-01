@@ -33,3 +33,8 @@ docker rm -f app-container rds-mysql-instance 2>/dev/null
 docker network rm cloud-db-vpc local-app-bridge 2>/dev/null
 rm -rf ~/docker-rds-lab
 ```
+
+
+
+<img width="1705" height="774" alt="image" src="https://github.com/user-attachments/assets/9e9cc775-1dbe-4329-b0eb-3780bac4bffc" />
+
