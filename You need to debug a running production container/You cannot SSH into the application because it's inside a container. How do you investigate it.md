@@ -31,3 +31,6 @@ docker stats <container_name> --no-stream
 docker rm -f live-prod-service
 rm -rf ~/docker-debug-live
 ```
+
+
+<img width="1912" height="945" alt="image" src="https://github.com/user-attachments/assets/673bca67-c034-438d-a00c-742500a015ca" />
